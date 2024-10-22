@@ -7,7 +7,7 @@ import theme from './theme/theme'
 function App() {
   return (
     <ChakraBaseProvider theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename='/react_todo_list'>
       <Router />
       </BrowserRouter>
     </ChakraBaseProvider>
