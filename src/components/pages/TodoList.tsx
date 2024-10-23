@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Flex, Heading, Input, Stack, Text } from "@chakra-ui/react";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { TodoItem } from "../molucules/TodoItem";
 import { useMessage } from "../../hooks/useMessage";
 import { v4 as uuid } from "uuid";
@@ -10,12 +10,22 @@ export const TodoList:FC = () => {
   type todoType = {
     id: string;
     item: string;
+    isCompleted: boolean;
   }
   const [todos, setTodos] = useState<todoType[]>([]);
   const [inputedTodo, setInputedTodo] = useState('');
   const { showMessage } = useMessage();
   const [completedTodoCount, setCompletedTodoCount] = useState(0);
-  const [inCompleteTodoCount, setInCompleteTodoCount] = useState(0);
+
+  useEffect(() => {
+    let completedCount = 0;
+    todos.map((todo) => {
+      if (todo.isCompleted) {
+        completedCount ++;
+      }
+    })
+    setCompletedTodoCount(completedCount)
+  }, [todos]);
 
   const onClickAddTodo = () => {
     if (inputedTodo === '') {
@@ -23,8 +33,11 @@ export const TodoList:FC = () => {
       return;
     }
 
-    setInCompleteTodoCount((prev) => prev + 1);
-    setTodos((prevTodos) => [...prevTodos, { id: uuid(), item: inputedTodo } ])
+    setTodos((prevTodos) => [...prevTodos, {
+      id: uuid(),
+      item: inputedTodo,
+      isCompleted: false,
+    } ])
     setInputedTodo('');
   }
 
@@ -36,33 +49,25 @@ export const TodoList:FC = () => {
 
     const newTodos = [...todos];
     newTodos.splice(id, 1);
-    if (isCompleted) {
-      setCompletedTodoCount((prev) => prev - 1);
-    } else {
-      setInCompleteTodoCount((prev) => prev - 1);
-    }
 
     setTodos(newTodos);
-
   }
 
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 10) {
+    const { value } = e.target;
+    if (value.length > 10) {
       showMessage({ title: MAX_INPUT_CHAR_COUNT, status: "warning" });
       return;
     }
 
-    setInputedTodo(e.target.value);
+    setInputedTodo(value);
   }
 
-  const onClickCheck = (isChecked: boolean) => {
-    if (isChecked) {
-      setCompletedTodoCount((prev) => prev + 1);
-      setInCompleteTodoCount((prev) => prev - 1);
-    } else {
-      setCompletedTodoCount((prev) => prev - 1);
-      setInCompleteTodoCount((prev) => prev + 1);
-    }
+  const onClickCheck = (index: number) => {
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = !newTodos[index].isCompleted
+
+    setTodos(newTodos)
   }
 
   return (
@@ -94,12 +99,13 @@ export const TodoList:FC = () => {
             key={todo.id}
             index={index}
             todoItem={todo.item}
+            isCompleted={todo.isCompleted}
             onClickDelete={onClickDelete}
             onClickCheck={onClickCheck}
           />
         ))}
       </Stack>
-      <Text fontSize="sm">{`total:${todos.length} completed:${completedTodoCount} incomplete:${inCompleteTodoCount}`}</Text>
+      <Text fontSize="sm">{`total:${todos.length} completed:${completedTodoCount} incomplete:${todos.length - completedTodoCount}`}</Text>
     </Box>
   </Flex>
   )

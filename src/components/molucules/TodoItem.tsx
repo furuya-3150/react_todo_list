@@ -7,35 +7,35 @@ import { MAX_INPUT_CHAR_COUNT, MIN_INPUT_CHAR_COUNT } from "../../config/validat
 type Props = {
   index: number;
   todoItem: string;
+  isCompleted: boolean;
   onClickDelete: (index: number, isCompleted: boolean) => void;
-  onClickCheck: (isChecked: boolean) => void;
+  onClickCheck: (index: number) => void;
 }
 
 export const TodoItem: FC<Props> = memo((props) => {
   const {
     index,
     todoItem,
+    isCompleted,
     onClickDelete,
     onClickCheck,
   } = props;
   const [todo, setTodo] = useState(todoItem);
   const [tempTodo, setTempTodo] = useState(todoItem);
   const [isEditing, setIsEditing] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
   const { showMessage } = useMessage();
 
   const onClickEdit = () => setIsEditing(true);
-  const onChangeCheck = () => {
-    setIsCompleted(!isCompleted);
-    onClickCheck(!isCompleted);
-  }
+
   const onChangeTodo = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 10) {
+    const { value } = e.target;
+
+    if (value.length > 10) {
       showMessage({ title: MAX_INPUT_CHAR_COUNT, status: "warning" });
       return;
     }
 
-    setTempTodo(e.target.value);
+    setTempTodo(value);
   }
 
   const onClickUpdate = () => {
@@ -74,7 +74,7 @@ export const TodoItem: FC<Props> = memo((props) => {
           size="md"
           colorScheme="teal"
           isChecked={isCompleted}
-          onChange={onChangeCheck}
+          onChange={() => {onClickCheck(index)}}
         />
 
         <Text 
