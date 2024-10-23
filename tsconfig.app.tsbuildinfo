@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/molucules/todoitem.tsx","./src/components/pages/page404.tsx","./src/components/pages/todolist.tsx","./src/config/validation.ts","./src/hooks/usemessage.tsx","./src/route/router.tsx","./src/theme/theme.ts"],"version":"5.6.3"}
