@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Flex, Heading, Input, Stack, Text } from "@chakra-ui/react";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { TodoItem } from "../molucules/TodoItem";
 import { useMessage } from "../../hooks/useMessage";
 import { v4 as uuid } from "uuid";
