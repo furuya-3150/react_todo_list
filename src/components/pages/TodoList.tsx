@@ -15,17 +15,9 @@ export const TodoList:FC = () => {
   const [todos, setTodos] = useState<todoType[]>([]);
   const [inputedTodo, setInputedTodo] = useState('');
   const { showMessage } = useMessage();
-  const [completedTodoCount, setCompletedTodoCount] = useState(0);
-
-  useEffect(() => {
-    let completedCount = 0;
-    todos.map((todo) => {
-      if (todo.isCompleted) {
-        completedCount ++;
-      }
-    })
-    setCompletedTodoCount(completedCount)
-  }, [todos]);
+  const totalTodosCount = todos.length;
+  const completedTodoCount = todos.filter((todo) => todo.isCompleted).length;
+  const incompleteTodoCount = totalTodosCount - completedTodoCount;
 
   const onClickAddTodo = () => {
     if (inputedTodo === '') {
@@ -105,7 +97,7 @@ export const TodoList:FC = () => {
           />
         ))}
       </Stack>
-      <Text fontSize="sm">{`total:${todos.length} completed:${completedTodoCount} incomplete:${todos.length - completedTodoCount}`}</Text>
+      <Text fontSize="sm">{`total:${totalTodosCount} completed:${completedTodoCount} incomplete:${incompleteTodoCount}`}</Text>
     </Box>
   </Flex>
   )
