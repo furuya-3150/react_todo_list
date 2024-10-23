@@ -41,7 +41,7 @@ export const TodoList:FC = () => {
     setInputedTodo('');
   }
 
-  const onClickDelete = (id: number, isCompleted: boolean) => {
+  const onClickDelete = (id: number) => {
     const isDeleteConfirmed = confirm("本当によろしいですか？");
     if (!isDeleteConfirmed) {
       return;
